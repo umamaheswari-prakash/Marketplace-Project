@@ -1,0 +1,40 @@
+create database bazaar;
+
+create table user
+(
+ id integer primary key
+ name varchar
+ password varchar
+)
+
+create table category
+(
+id integer  primary key
+name varchar
+)
+create table seller
+(
+ id integer primary key
+ name varchar
+)
+create table product
+(
+ id integer primary key
+ name varchar
+ price decimal
+ count integer
+ description varchar
+ seller_id integer  foreign key REFERENCES seller(id)
+ category_id  integer  foreign key  REFERENCES category(id)
+
+)
+create table cart
+(
+id int primary key
+product_id int foreign key REFERENCES product(id)
+count int
+)
+
+
+
+
