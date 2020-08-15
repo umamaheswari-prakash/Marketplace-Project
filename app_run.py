@@ -1,84 +1,88 @@
-from flask import Flask, request, jsonify,render_template,redirect,url_for,session
-from methods import is_valid_user,get_category_list,product_list,insert_into_cart,update_to_cart,delete_cart,view_cart
+from domain_entities import User, Category, Cart, Product
+from database_connection import db_connect
+session=db_connect()
 
 
-app = Flask(__name__)
-app.secret_key="onlineShopping"
+def is_valid_user(user_name,password):
+    details=session.query(User).filter_by(name=user_name, password=password).first()
+    details.name=user_name
+    details.password=password
+    details.authentication=True
+    if details !=None:
+       session.add(details)
+       session.commit()
+       return True
+    else:
+       return False
+
+def check_current_user(user_id):
+    user=session.query(User).filter_by(id=user_id).first()
+    if user.authentication==True:
+        return True
+    else:
+        return False
 
 
-@app.route('/')
-def Home():
-    return "welcome to the online Bazaar",200
 
-@app.route('/login', methods=['GET','POST'])
-def get_login_details():
-       data=request.get_json()
-       user_name = data['user_name']
-       password = data['password']
-       result=is_valid_user(user_name,password)
-       if result== True:
-         return "logged in successfully ",200
-         #return redirect(url_for(Home))
-       else:
-         #return  render_template(url_for('login.hlml'))
-         return "invalid user_name or password",401
-
-
-@app.route('/category', methods=['GET'])
-def get_category():
-    category=get_category_list()
-    return jsonify(category),200
-
-
-@app.route('/category/<id>', methods=['GET'])
-def get_available_items(id):
-    category_id = id
-    list=product_list(category_id)
-    return jsonify(list),200
-
-
-@app.route('/cart/<user_id>', methods=['POST'])
-def add_to_cart(user_id):
-    user_id = user_id
-    data=request.get_json()
-    product_id =data['product_id']
-    quantity = data['quantity']
-    result=insert_into_cart(user_id,product_id,quantity)
+def get_category_list():
+    result=[]
+    list = session.query(Category).all()
+    for category in list:
+        result.append("category_id:{}  category_name:{}".format(category.id,category.name))
     return result
 
-@app.route('/cart/<user_id>', methods=['PUT'])
-def cart_update(user_id):
-    user_id = user_id
-    data=request.get_json()
-    product_id = data['product_id']
-    quantity = data['quantity']
-    result = update_to_cart(user_id,product_id,quantity)
+def product_list(category_id):
+    result=[]
+    items = session.query(Product).filter(Product.category_id == category_id).all()
+    for row in items:
+        result.append("Id:{}    Name:{}   price:{}".format(row.id, row.name, row.price))
     return result
 
 
-@app.route('/cart/<user_id>', methods=['DELETE'])
-def remove_cart_item(user_id):
-    user_id = user_id
-    data=request.get_json()
-    product_id = data['product_id']
-    result=delete_cart(user_id,product_id)
+def insert_into_cart(user_id,product_id,quantity):
+    stock = session.query(Product).filter_by(id=product_id).first()
+    available_stock = stock.count
+    if available_stock > int(quantity) and int(quantity)>0:
+        item = Cart(user_id=user_id, product_id=product_id, count=quantity)
+        session.add(item)
+        session.commit()
+        return "add_to_cart successfully", 200
+    elif int(quantity)<=0:
+        return "enter a valid quantity",400
+    else:
+        return "stock is unavailable", 400
+
+def update_to_cart(user_id,product_id,quantity):
+    product = session.query(Cart).filter_by(user_id=user_id, product_id=product_id).one()
+    product.product_id = product_id
+    product.count = quantity
+    session.add(product)
+    session.commit()
+    return "Cart successfully updated", 200
+
+def delete_cart(user_id,product_id):
+    product = session.query(Cart).filter_by(user_id=user_id, product_id=product_id).first()
+    session.delete(product)
+    session.commit()
+    return "Cart item removed successfully", 200
+
+
+
+def view_cart(user_id):
+    list=[]
+    result=[]
+    products = session.query(Cart).filter_by(user_id=user_id).all()
+    for row in products:
+        list.append(row.product_id)
+    detail = session.query(Product).all()
+    for data in detail:
+        if data.id in list:
+            result.append("Id:{}   Product:{}   Price:{}   Quantity:{}".format(data.id, data.name, data.price, data.count))
     return result
 
-
-@app.route('/cart/<user_id>', methods=['GET'])
-def cart_details(user_id):
-    user_id = user_id
-    data=view_cart(user_id)
-    return jsonify(data),200
-
-
-@app.route('/logout',methods=['POST'])
-def logout():
-      session.pop=('logged in',None)
-      session.pop=('user_name',None)
-      return "logged out successfully",200
-
-
-
-if __name__ == "__main__":
-    app.run(port=80,debug=True)
+def logged_out(user_id):
+    user=session.query(User).filter_by(id=user_id).one()
+    user.authentication=False
+    session.add(user)
+    session.commit()
+    return True

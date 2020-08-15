@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, String,Column,ForeignKey
+from sqlalchemy import Integer, String,Column,ForeignKey,BOOLEAN
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 Base = declarative_base()
@@ -8,6 +8,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(120),unique=True)
     password=Column(String(20),unique=True)
+    authentication=Column(BOOLEAN,default=False)
     cart = relationship('Cart', backref='User')
 
 
