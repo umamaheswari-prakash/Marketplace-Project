@@ -1,27 +1,24 @@
-from domain_entities import User, Category, Cart, Product
-from database_connection import db_connect
+from entities import User, Category, Cart, Product
+from db_connection import db_connect
 session=db_connect()
-
+userId = ""
 
 def is_valid_user(user_name,password):
-    details=session.query(User).filter_by(name=user_name, password=password).first()
-    details.name=user_name
-    details.password=password
-    details.authentication=True
-    if details !=None:
-       session.add(details)
-       session.commit()
-       return True
-    else:
-       return False
+   data=session.query(User).filter_by(name=user_name, password=password).first()
+   if session.query(User).filter_by(name=user_name, password=password).first():
+      global userId
+      userId=data.id
+      print("change:",userId)
+      return True
+   else:
+      return False
 
 def check_current_user(user_id):
-    user=session.query(User).filter_by(id=user_id).first()
-    if user.authentication==True:
-        return True
+    print("nothing is there:",user_id)
+    if int(user_id) == int(userId):
+      return True
     else:
-        return False
-
+      return False
 
 
 def get_category_list():
@@ -46,25 +43,29 @@ def insert_into_cart(user_id,product_id,quantity):
         item = Cart(user_id=user_id, product_id=product_id, count=quantity)
         session.add(item)
         session.commit()
-        return "add_to_cart successfully", 200
+        return True
     elif int(quantity)<=0:
-        return "enter a valid quantity",400
+        return False
     else:
-        return "stock is unavailable", 400
+        return "result"
 
 def update_to_cart(user_id,product_id,quantity):
-    product = session.query(Cart).filter_by(user_id=user_id, product_id=product_id).one()
+    product = session.query(Cart).filter_by(user_id=user_id, product_id=product_id).first()
     product.product_id = product_id
     product.count = quantity
-    session.add(product)
-    session.commit()
-    return "Cart successfully updated", 200
+    if quantity>0:
+      session.add(product)
+      session.commit()
+      return True
+    else:
+      return False
+
 
 def delete_cart(user_id,product_id):
     product = session.query(Cart).filter_by(user_id=user_id, product_id=product_id).first()
     session.delete(product)
     session.commit()
-    return "Cart item removed successfully", 200
+    return True
 
 
 
@@ -80,9 +81,9 @@ def view_cart(user_id):
             result.append("Id:{}   Product:{}   Price:{}   Quantity:{}".format(data.id, data.name, data.price, data.count))
     return result
 
-def logged_out(user_id):
-    user=session.query(User).filter_by(id=user_id).one()
-    user.authentication=False
-    session.add(user)
-    session.commit()
-    return True
+def logged_out():
+    print("logout:",userId)
+    if userId != "":
+       return True
+    else:
+       return False
