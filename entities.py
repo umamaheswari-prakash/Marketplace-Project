@@ -8,8 +8,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(120),unique=True)
     password=Column(String(20),unique=True)
-    authentication=Column(BOOLEAN,default=False)
-    cart = relationship('Cart', backref='User')
+
 
 
 class Category(Base):
