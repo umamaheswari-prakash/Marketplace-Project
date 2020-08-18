@@ -67,8 +67,8 @@ def cart_update(user_id):
        if result==True:
           return "Cart successfully updated", 200
        else:
-          d=delete_cart(user_id,product_id)
-          return d
+          data=delete_cart(user_id,product_id)
+          return data
     else:
        return "permission not given",403
 

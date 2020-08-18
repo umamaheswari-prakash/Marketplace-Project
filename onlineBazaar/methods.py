@@ -1,5 +1,5 @@
 from entities import User, Category, Cart, Product
-from db_connection import db_connect
+from databse import db_connect
 session=db_connect()
 userId = ""
 
@@ -14,7 +14,7 @@ def is_valid_user(user_name,password):
       return False
 
 def check_current_user(user_id):
-    print("nothing is there:",user_id)
+    print("nothing is there:",userId)
     if int(user_id) == int(userId):
       return True
     else:
