@@ -1,6 +1,5 @@
-from flask import Flask
-from flask import request
-from flask import jsonify
+from flask import Flask,request,jsonify,render_template,url_for
+from werkzeug.utils import redirect
 from flask import session
 from methods import *
 
@@ -14,17 +13,18 @@ def Home():
 
 @app.route('/login', methods=['GET','POST'])
 def get_login_details():
-       data=request.get_json()
-       user_name = data['user_name']
-       password = data['password']
-       result=is_valid_user(user_name,password)
-       if result== True:
-         session['user_name']=user_name
-         return "logged in successfully ",200
-         #return redirect(url_for(Home))
-       else:
-         #return  render_template(url_for('login.hlml'))
-         return "invalid user_name or password",401
+    data=request.get_json()
+    user_name = data['user_name']
+    password = data['password']
+    result=is_valid_user(user_name,password)
+    if result== True:
+        session['logged_in']=True
+        session['user']=user_name
+        return "logged in successfully ",200
+        #return redirect(url_for(Home))
+    else:
+       #return  render_template(url_for('login.hlml'))
+       return "invalid user_name or password",401
 
 
 @app.route('/category', methods=['GET'])
@@ -55,7 +55,8 @@ def add_to_cart(user_id):
             return "Enter a valid quantity",400
          else:
             return "stock is unavailable",400
-      return "cannot access:'unauthorized user",403
+      else:
+         return "cannot access:'unauthorized user",403
     except Exception as e:
         return (str(e))
 
