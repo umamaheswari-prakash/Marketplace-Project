@@ -1,7 +1,4 @@
-from entities import User
-from entities import Category
-from entities import Cart
-from entities import Product
+from entities import *
 from database import db_connect
 
 session=db_connect()
@@ -70,8 +67,6 @@ def delete_cart(user_id,product_id):
     session.delete(product)
     session.commit()
     return True
-
-
 
 def view_cart(user_id):
     list=[]

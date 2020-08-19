@@ -2,16 +2,7 @@ from flask import Flask
 from flask import request
 from flask import jsonify
 from flask import session
-
-from methods import get_category_list
-from methods import product_list
-from methods import insert_into_cart
-from methods import update_to_cart
-from methods import delete_cart
-from methods import view_cart
-from methods import check_current_user
-from methods import logged_out
-from methods import is_valid_user
+from methods import *
 
 app = Flask(__name__)
 app.secret_key="onlineShopping"
@@ -55,16 +46,18 @@ def add_to_cart(user_id):
     product_id =data['product_id']
     quantity = data['quantity']
     current_user=check_current_user(user_id)
-    if current_user==True:
-       result=insert_into_cart(user_id,product_id,quantity)
-       if result==True:
-          return "add_to_cart successfully", 200
-       elif result==False:
-          return "Enter a valid quantity",400
-       else:
-          return "stock is unavailable",400
-    else:
-        return "unathorized user",403
+    try:
+      if current_user==True:
+         result=insert_into_cart(user_id,product_id,quantity)
+         if result==True:
+            return "add_to_cart successfully", 200
+         elif result==False:
+            return "Enter a valid quantity",400
+         else:
+            return "stock is unavailable",400
+      return "unathorized user",403
+    except Exception as e:
+        return (str(e))
 
 @app.route('/cart/<user_id>', methods=['PUT'])
 def cart_update(user_id):
@@ -73,15 +66,18 @@ def cart_update(user_id):
     product_id = data['product_id']
     quantity = data['quantity']
     current_user = check_current_user(user_id)
-    if current_user== True:
-       result = update_to_cart(user_id,product_id,quantity)
-       if result==True:
-          return "Cart successfully updated", 200
+    try:
+       if current_user== True:
+          result = update_to_cart(user_id,product_id,quantity)
+          if result==True:
+            return "Cart successfully updated", 200
+          else:
+            data=delete_cart(user_id,product_id)
+            return data
        else:
-          data=delete_cart(user_id,product_id)
-          return data
-    else:
-       return "permission not given",403
+          return "unauthorized user",403
+    except Exception as e:
+        return (str(e))
 
 
 @app.route('/cart/<user_id>', methods=['DELETE'])
