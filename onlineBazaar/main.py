@@ -55,7 +55,7 @@ def add_to_cart(user_id):
             return "Enter a valid quantity",400
          else:
             return "stock is unavailable",400
-      return "unathorized user",403
+      return "cannot access:'unauthorized user",403
     except Exception as e:
         return (str(e))
 
@@ -75,7 +75,7 @@ def cart_update(user_id):
             data=delete_cart(user_id,product_id)
             return data
        else:
-          return "unauthorized user",403
+          return "cannot access:'unauthorized user",403
     except Exception as e:
         return (str(e))
 
@@ -91,7 +91,7 @@ def remove_cart_item(user_id):
         if result == True:
           return "Cart item removed successfully", 200
     else:
-        return "permission not given",403
+        return "cannot access:'unauthorized user'",403
 
 
 @app.route('/cart/<user_id>', methods=['GET'])
@@ -102,7 +102,7 @@ def cart_details(user_id):
       data=view_cart(user_id)
       return jsonify(data),200
     else:
-      return "permission not given",403
+      return "cannot access:'unauthorized user",403
 
 @app.route('/logout',methods=['POST'])
 def logout():
@@ -112,7 +112,7 @@ def logout():
       if result==True:
          return "logged out successfully",200
       else:
-         return "already logout"
+         return "please login"
 
 
 
