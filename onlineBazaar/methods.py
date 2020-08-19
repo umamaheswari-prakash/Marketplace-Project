@@ -1,5 +1,9 @@
-from entities import User, Category, Cart, Product
-from databse import db_connect
+from entities import User
+from entities import Category
+from entities import Cart
+from entities import Product
+from database import db_connect
+
 session=db_connect()
 userId = ""
 
@@ -82,8 +86,10 @@ def view_cart(user_id):
     return result
 
 def logged_out():
+    global userId
     print("logout:",userId)
     if userId != "":
+       userId=""
        return True
     else:
        return False

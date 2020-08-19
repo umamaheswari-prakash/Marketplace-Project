@@ -1,6 +1,17 @@
-from flask import Flask, request, jsonify,render_template,redirect,url_for,session
-from methods import is_valid_user,get_category_list,product_list,insert_into_cart,update_to_cart,delete_cart,view_cart,check_current_user,logged_out
+from flask import Flask
+from flask import request
+from flask import jsonify
+from flask import session
 
+from methods import get_category_list
+from methods import product_list
+from methods import insert_into_cart
+from methods import update_to_cart
+from methods import delete_cart
+from methods import view_cart
+from methods import check_current_user
+from methods import logged_out
+from methods import is_valid_user
 
 app = Flask(__name__)
 app.secret_key="onlineShopping"

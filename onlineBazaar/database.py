@@ -6,4 +6,4 @@ def db_connect():
     db=create_engine(create_url)
     Session = sessionmaker(bind=db)
     session = Session()
-    return (session)
+    return session
