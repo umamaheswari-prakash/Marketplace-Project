@@ -1,26 +1,29 @@
-from entities import User,Product,Cart,Category
+from models import User,Product,Cart,Category
 from database import db_connect
-
 db_session=db_connect()
-userId = ""
 
 def is_valid_user(user_name,password):
-   data=db_session.query(User).filter_by(name=user_name, password=password).first()
+   user=db_session.query(User).filter_by(name=user_name, password=password).first()
+   auth=True
+   user.is_authenticated=auth
    if db_session.query(User).filter_by(name=user_name, password=password).first():
-      global userId
-      userId=data.id
-      print("change:",userId)
+      db_session.add(user)
+      db_session.commit()
       return True
    else:
       return False
 
-def check_current_user(user_id):
-    print("nothing is there:",userId)
-    if int(user_id) == int(userId):
-      return True
+def check_current_user(user_id,password):
+    data=db_session.query(User).filter_by(id=user_id).first()
+    auth=data.is_authenticated
+    pswd=data.password
+    if auth==True:
+      if password ==pswd:
+         return True
+      else:
+        return False
     else:
       return False
-
 
 def get_category_list():
     result=[]
@@ -35,7 +38,6 @@ def product_list(category_id):
     for row in items:
         result.append("Id:{}    Name:{}   price:{}".format(row.id, row.name, row.price))
     return result
-
 
 def insert_into_cart(user_id,product_id,quantity):
     stock = db_session.query(Product).filter_by(id=product_id).first()
@@ -61,7 +63,6 @@ def update_to_cart(user_id,product_id,quantity):
     else:
       return False
 
-
 def delete_cart(user_id,product_id):
     product = db_session.query(Cart).filter_by(user_id=user_id, product_id=product_id).first()
     db_session.delete(product)
@@ -80,11 +81,13 @@ def view_cart(user_id):
             result.append("Id:{}   Product:{}   Price:{}   Quantity:{}".format(data.id, data.name, data.price, data.count))
     return result
 
-def logged_out():
-    global userId
-    print("logout:",userId)
-    if userId != "":
-       userId=""
-       return True
+def logged_out(user_id):
+    user = db_session.query(User).filter_by(id=user_id).first()
+    if user.is_authenticated==True:
+        auth = False
+        user.is_authenticated = auth
+        db_session.add(user)
+        db_session.commit()
+        return True
     else:
-       return False
+        return False
