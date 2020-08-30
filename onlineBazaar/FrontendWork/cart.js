@@ -1,5 +1,5 @@
-const urlvalue = new URLSearchParams(window.location.search);
-const user_id =urlvalue.get('user_id');
+const urlParams = new URLSearchParams(window.location.search);
+const user_id =urlParams.get('user_id');
 if (user_id == null){
 alert("Please Login!")
 window.location.replace("D:/profiles/frontend/login.html")
@@ -93,6 +93,19 @@ function updateplus(ids,qnty){
        })
     })
 }
-
-
+function home(){
+	window.location.replace(`D:/profiles/frontend/categories.html?user_id=${user_id}`)
+   }
+function logout(){
+	var todos=fetch(`http://127.0.0.1:80/logout/${user_id}`,{
+		method:'post'
+    });
+    todos.then((res)=>{
+       res.json()
+       .then((data)=>{
+            alert(data['ok'])
+			window.location.replace("D:/profiles/frontend/login.html")
+       })
+    });
+}
 

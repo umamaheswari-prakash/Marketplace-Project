@@ -1,5 +1,5 @@
-const urlvalue = new URLSearchParams(window.location.search);
-const user_id =urlvalue.get('user_id');
+const urlParams = new URLSearchParams(window.location.search);
+const user_id =urlParams.get('user_id');
 if (user_id == null){
 alert("Please Login")
 window.location.replace("D:/profiles/frontend/login.html")
@@ -24,7 +24,7 @@ console.log('id',event.target.id)
 var todos=fetch("http://127.0.0.1:80/category/"+event.target.id);
 todos.then(response => response.json())
     .then(json=> {
-        let li =`<tr><th>id</th><th>Name</th><th>price</th><th>description</th><th>cart</th></tr>`;
+        let li =`<caption>PRODUCTS</caption><tr><th>id</th><th>Name</th><th>price</th><th>description</th><th>cart</th></tr>`;
         json.forEach(data=>{
             li += `<tr>
                <td>${data.id}</td>
