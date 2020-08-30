@@ -1,5 +1,5 @@
-const urlParams = new URLSearchParams(window.location.search);
-const user_id =urlParams.get('user_id');
+const urlvalue = new URLSearchParams(window.location.search);
+const user_id =urlvalue.get('user_id');
 if (user_id == null){
 alert("Please Login")
 window.location.replace("D:/profiles/frontend/login.html")
