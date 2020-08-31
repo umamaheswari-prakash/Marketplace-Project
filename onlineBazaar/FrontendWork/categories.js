@@ -24,7 +24,7 @@ console.log('id',event.target.id)
 var todos=fetch("http://127.0.0.1:80/category/"+event.target.id);
 todos.then(response => response.json())
     .then(json=> {
-        let li =`<caption>PRODUCTS</caption><tr><th>id</th><th>Name</th><th>price</th><th>description</th><th>cart</th></tr>`;
+        let li =`<caption>PRODUCTS</caption><tr><th>ID</th><th>NAME</th><th>PRICE</th><th>DESCRIPTION</th><th>CART</th></tr>`;
         json.forEach(data=>{
             li += `<tr>
                <td>${data.id}</td>

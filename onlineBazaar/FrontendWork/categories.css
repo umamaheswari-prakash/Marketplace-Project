@@ -1,3 +1,6 @@
+body{
+	background-color:rgb(200, 200, 200);
+}
 #navlist {
 	background-color: #0074D9;
 	top:0;
@@ -33,7 +36,9 @@ table,th,td{
 	}
 table{
 	border-collapse:collapse;
-	width:50%;
+	width:70%;
+	color:black;
+	font-weight:bold;
 }
 th{
 	height:50px;

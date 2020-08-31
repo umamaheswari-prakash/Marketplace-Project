@@ -10,7 +10,7 @@ var todos=fetch(`http://127.0.0.1:80/cart/${user_id}`);
     todos.then(response => response.json())
       .then(value=> {
        console.log("ok",value)
-       let li = `<tr><th>id</th><th>Name</th><th>seller_name</th><th>price</th><th>quantity</th><th>cart</th></tr>`;
+       let li = `<caption>CART ITEMS</caption><tr><th>ID</th><th>NAME</th><th>SELLER</th><th>PRICE</th><th>QUANTITY</th><th>CART</th></tr>`;
           value.forEach(data=>{
 		  console.log(data.Quantity)
           li += `<tr>

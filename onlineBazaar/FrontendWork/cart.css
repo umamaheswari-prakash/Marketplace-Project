@@ -1,11 +1,16 @@
+body{
+	background-color:rgb(200, 200, 200);
+}
 table,th,td{
 	padding:15px;
 	border: 1px solid black;
+	color:black;
+	font-weight:bold;
 	}
 table{
 	border-collapse:collapse;
 	width:70%;
-	padding-top:50px;
+	margin-top:10%;
 } 
 th{
 	height:50px;
@@ -31,9 +36,6 @@ th{
 #navlist a:hover {
 	background-color: #ddd;
 	color: black;
-}
-#product{	
- padding-top:60px;
 }
 footer {
   position:fixed;
