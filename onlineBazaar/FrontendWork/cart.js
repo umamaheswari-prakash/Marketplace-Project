@@ -41,6 +41,7 @@ var todos=fetch(`http://127.0.0.1:80/cart/${user_id}`);
       res.json()
       .then((data)=>{
         alert(data['ok'])
+		location.reload();
       })
     })
    }
@@ -62,10 +63,11 @@ function updatemin(pid,qnty){
         body:JSON.stringify(cred)
     });
     todos.then((res)=>{
-       res.json()
-       .then((data)=>{
-         alert(data['ok'])
-         console.log(data)
+        res.json()
+        .then((data)=>{
+          alert(data['ok'])
+          console.log(data)
+		  location.reload();
        })
     })
 }
@@ -90,6 +92,7 @@ function updateplus(ids,qnty){
        .then((data)=>{
           alert(data['ok'])
           console.log(data)
+		  location.reload();
        })
     })
 }

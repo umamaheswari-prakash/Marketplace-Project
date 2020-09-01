@@ -49,12 +49,12 @@ def add_to_cart(user_id):
     if current_user == True:
         result = insert_into_cart(user_id, product_id, quantity)
         try:
-           if result==True:
-              return jsonify({'ok':'add to cart successfully'})
-           elif result==False:
-              return jsonify({'ok':'enter valid quantity'})
-           else:
-              return jsonify({'ok':'stock is unavailable'})
+          if result==True:
+            return jsonify({'ok':'add to cart successfully'})
+          elif result=="result":
+            return jsonify({'ok':'Already in your cart'})
+          else:
+            return jsonify({'ok':'stock is unavailable'})
         except Exception as e:
            return (str(e))
     return jsonify({'ok':'unauthorized user'})

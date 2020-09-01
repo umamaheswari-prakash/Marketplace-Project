@@ -47,15 +47,17 @@ def product_list(category_id):
 def insert_into_cart(user_id,product_id,quantity):
     stock = db_session.query(Product).filter_by(id=product_id).first()
     available_stock = stock.count
-    if available_stock > int(quantity) and int(quantity)>0:
-        item = Cart(user_id=user_id, product_id=product_id, count=quantity)
-        db_session.add(item)
-        db_session.commit()
-        return True
-    elif int(quantity)<=0:
-        return False
+    if available_stock >int(quantity):
+       pro=db_session.query(Cart).filter_by(user_id=user_id,product_id=product_id).first()
+       if pro != None:
+           return "result"
+       else:
+           item = Cart(user_id=user_id, product_id=product_id, count=quantity)
+           db_session.add(item)
+           db_session.commit()
+           return True
     else:
-        return "result"
+        return False
 
 def update_to_cart(user_id,product_id,quantity):
     product = db_session.query(Cart).filter_by(user_id=user_id, product_id=product_id).first()
